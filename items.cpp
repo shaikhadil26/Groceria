@@ -41,7 +41,9 @@ class Categories{
 
 int main(){
     Categories fruits, vegetables, dairy, meats, snacks, bakery;
-    fruits.insert(1, "Apple", 25);
-    fruits.displayList();
+    fruits.insert(1, "Apple", 150);
+    fruits.insert(2, "Banana", 60);
+    fruits.insert(3, "Grape", 25);
 
+    vegetables.insert(1, "Potatoes", 40);
 }
