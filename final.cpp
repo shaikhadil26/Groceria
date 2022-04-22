@@ -119,7 +119,7 @@ int main(){
     
     Categories fruits, vegetables, dairy, meats, snacks, bakery;
     
-     fruits.insert(1, "Apple", 150);
+    fruits.insert(1, "Apple", 150);
     fruits.insert(2, "Banana", 60);
     fruits.insert(3, "Grape", 25);
     fruits.insert(4,"Peaches",100);
@@ -248,42 +248,49 @@ int main(){
                 else
                     cout<<"Invalid password! ";
                 break;
-                
+
             case 3:
-                cout<<"Select category for grocery: \n1. Fruits \n2.Vegetables  \n3.Dairy \n4.Meats \n5.Snacks  \n6.Bread & Bakery \nExit ";
-                cin>>ch2;
-                switch (ch2)
-                {
-                case 1:
-                    cout<<"Fruits Menu :- \n";
-                    fruits.displayList();
-                    break;
-                case 2:
-                    cout<<"Vegetables Menu :- \n";
-                    vegetables.displayList();
-                    break;
-                case 3:
-                    cout<<"dairy Menu :- \n";
-                    dairy.displayList();
-                    break;
-                case 4:
-                    cout<<"Meats Menu :- \n";
-                    meats.displayList();
-                    break;
-                case 5:
-                    cout<<"Snacks Menu :- \n";
-                    fruits.displayList();
-                    break; 
-                case 6:
-                    cout<<"Bread & Bakery Menu :- \n";
-                    bakery.displayList();
-                    break;
-                case 7:
+                while (true){
+                    cout<<"Select category for grocery: \n1. Fruits \n2.Vegetables  \n3.Dairy \n4.Meats \n5.Snacks  \n6.Bread & Bakery \n7.Back ";
+                    cin>>ch2;
+                    switch (ch2){
+                    case 1:
+                        cout<<"Fruits Menu :- \n";
+                        fruits.displayList();
+                        break;
 
-                    break;
+                    case 2:
+                        cout<<"Vegetables Menu :- \n";
+                        vegetables.displayList();
+                        break;
 
-                default:
-                    break;
+                    case 3:
+                        cout<<"dairy Menu :- \n";
+                        dairy.displayList();
+                        break;
+
+                    case 4:
+                        cout<<"Meats Menu :- \n";
+                        meats.displayList();
+                        break;
+
+                    case 5:
+                        cout<<"Snacks Menu :- \n";
+                        snacks.displayList();
+                        break;
+
+                    case 6:
+                        cout<<"Bread & Bakery Menu :- \n";
+                        bakery.displayList();
+                        break;
+
+                    case 7:
+
+                        break;
+
+                    default:
+                        break;
+                }
                 }
                 break; 
 
