@@ -136,8 +136,7 @@ int main(){
                     bakery.displayList();
                     break;
                 case 7:
-                    cout<<"Fruits Menu :- ";
-                    fruits.displayList();
+                    
                     break;
 
                 default:
