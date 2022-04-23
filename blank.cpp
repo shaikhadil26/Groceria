@@ -1,6 +1,118 @@
 #include<iostream>
 #include<iomanip>
 using namespace std;
+using std::string;
+//TODO : hidden password
+struct node
+    {
+        int id;
+        string name;
+        int cost;
+        int number;
+        node*next;
+    };
+class UserDatabase{
+    public:
+    string userId;
+    string pass;
+    string name;
+    int orders;
+    int counter = 0;
+    UserDatabase* next;
+    UserDatabase* head = NULL;
+
+    void insert(string user_Id, string Pass, string Name, int Orders){
+        UserDatabase *current= head;
+        UserDatabase *last;
+        last = new UserDatabase;
+        last->userId = user_Id;
+        last->pass = Pass;
+        last ->name = Name;
+        last->orders = Orders;
+        last->next = NULL;
+
+        if (head == NULL){
+            head = last;
+        }
+        else{
+            while (current->next != NULL){
+                current = current->next; 
+            }
+            current->next = last;    
+        }    
+    }
+    
+    bool checkUser(string User, string Pass){
+        counter = 0;
+        UserDatabase *current= head;
+        while(current != NULL ){
+            if(current ->userId == User && current->pass == Pass){
+                return true;
+            }
+            else{
+                counter++; 
+                current = current->next;
+            }        
+        }
+        return false;
+    }
+
+    void modifyUser(string user_Id, string Pass, string Name){
+    UserDatabase *current = head;
+    for(int i = 0; i < counter - 1; i++)
+        current = current ->next;
+    current ->userId = user_Id;
+    current ->pass = Pass;
+    current ->name = Name;
+    }
+
+    string getName(){
+        UserDatabase *c = head;
+        for(int i = 0; i < counter ; i++)
+            c = c->next;
+        return c->name;    
+    }
+    int getOrder(){
+        UserDatabase *c = head;
+        for(int i = 0; i < counter ; i++)
+            c = c->next;
+        return c->orders;    
+    }
+
+};
+
+
+node*base=NULL;
+void add(int SerialNo, string Name, int Price,int Number)
+{
+    node*item;
+    item =new node;
+    item->id=SerialNo;
+    item->name=Name;
+    item->cost=Price;
+    item->number=Number;
+    item->next=base;
+    base=item;  
+}
+void displaycart()//displays the final linked list
+{
+    if(base==NULL)
+    cout<<"Empty Cart"<<endl;
+    else
+    {   int i = 1;
+        node *current=base;
+        cout<<left<<setw(10)<<"SerialNo"<<left<<setw(35)<<"Name"<<left<<setw(25)<<"Price"<<left<<setw(10)<<"Number of Products"<<endl;
+        cout<<endl;
+        while(current!=NULL)
+        {
+            cout<<left<<setw(10)<<i<<left<<setw(35)<<current->name<<left<<setw(25)<<current->cost<<left<<setw(10)<<current->number<<"\n\n";
+            current=current->next;
+            i++;
+        }
+        
+        cout<<endl;
+    }
+}
 
 class Categories{
     public:
@@ -9,6 +121,8 @@ class Categories{
     int price;
     Categories* next;
     Categories* head = NULL;
+    
+    
 
     void insert(int SerialNo, string Name, int Price){
         Categories *current= head;
@@ -33,73 +147,42 @@ class Categories{
     void displayList(){
         Categories *current = head;
         while(current != NULL){
-            cout<<current ->serialNo<<") "<<left<<setw(30)<<current ->name<<"Rs. "<<current ->price<<"\n";
+            cout<<current ->serialNo<<") "<<left<<setw(30)<<current ->name/*<<left<<setw(10)*/<<"Rs. "<<current ->price<<"\n";
             current = current->next;
         }
     }
-
     int traverse(int j){
-        Categories *c = head;
+        Categories *current = head;
         for(int i=1;i<j;i++)
-            c = c->next;
-
-        return c->price;
+        current=current->next;
+        return (current->price);
     }
-
     string traversal(int j){
-        Categories *c = head;
+        Categories *current = head;
         for(int i=1;i<j;i++)
-            c=c->next;
-
-        return c->name;
+        current=current->next;
+        return (current->name);
     }
 
 };
 
-class Bill{
-        public:
-        string name;
-        int cost;
-        int number;
-        int id;
-        Bill*next;
-        Bill* head =NULL;
-        
-void add(int SerialNo, string Name, int Price,int Number){
-    Bill* item;
-    item =new Bill;
-    item->id=SerialNo;
-    item->name=Name;
-    item->cost=Price;
-    item->number=Number;
-    item->next=NULL;
 
-    if( head ==NULL)
-     head =item;
-    else{
-    Bill*current= head ;
-    while(current->next!=NULL)
-    current=current->next;
-    current->next=item;
-    }
-    
-}
-
-void displayList(){
-        Bill *current =  head ;
-        while(current != NULL){
-            cout<<current ->name<<"\n";
-            current = current->next;
-        }
-    }
-
-};
 
 
 int main(){
-    Bill b1;
+    int xa;
+    int x;
+    string id, pass, name;
+    bool condition;
+    int counter = 3;
+    char ch;
+    UserDatabase u1;
+    u1.insert("abc@gmail.com", "123", "ABC",8);
+    u1.insert("xyz@gmail.com", "456", "XYZ",4);
+    u1.insert("ijk@gmail.com", "789", "ijk",2);
+    
     Categories fruits, vegetables, dairy, meats, snacks, bakery;
-
+    
     fruits.insert(1, "Apple", 150);
     fruits.insert(2, "Banana", 60);
     fruits.insert(3, "Grape", 25);
@@ -161,10 +244,75 @@ int main(){
     bakery.insert(7,"Bagel",50);
     bakery.insert(8,"Velvet Cupcake",50);
     bakery.insert(9,"Apple Pie",750);
-    int x ,xa;
-    int ch2;
+
+    cout<<"\t\tWelcome to Groceria\n\tYour one step shop to all things grocery\n\nAre you an existing customer (enter y/n): "; 
+    cin>>ch;
+    
+    if( ch == 'n'){
+        cout<<"Enter name: ";
+        cin>>name;
+        cout<<"Enter email id: ";
+        cin>>id;
+        cout<<"Enter password: ";
+        cin>>pass;
+        u1.insert(id, pass, name, 0);
+        cout<<"Account created \nPlease login again :) \n";
+    }
+
+    retry:
+    cout<<"Enter email id: ";
+    cin>>id;
+    cout<<"Enter password: ";
+    cin>>pass;
+    condition = u1.checkUser(id, pass);
+    if(condition == false){
+        cout<<"Invalid ID/Pass";
+        cout<<"\nYou have "<<counter<<" valid retries \n";
+        counter--;
+        if(counter >= 0)
+            goto retry;
+        else 
+            return 0;
+    }
+                
+    name = u1.getName();
+    cout<<"Welcome "<<name<<"\nWhat would you like to do today\n";
     while(true){
-         cout<<"Select category for grocery: \n1. Fruits \n2.Vegetables  \n3.Dairy \n4.Meats \n5.Snacks  \n6.Bread & Bakery \n7.Back\n\n ";
+        cout<<"\n1. Display account information \n2. Modify account information \n3. Order groceries \n";
+        int ch1, ch2;
+        cin>>ch1; 
+        switch (ch1){
+            case 1:
+                int tOrders;
+                tOrders = u1.getOrder();
+                cout<<"Name: "<<name<<"\n";
+                cout<<"Email ID: "<<id<<"\t";
+                cout<<"Total number of orders: "<<tOrders;
+                cout<<endl;
+                break;
+
+            case 2:
+                bool check;
+                cout<<"Please re-enter account password ";
+                cin>>pass;
+                check = u1.checkUser(id, pass);
+                if(check == true){
+                    cout<<"Enter new name: ";
+                    cin>>name;
+                    cout<<"Enter new email id: ";
+                    cin>>id;
+                    cout<<"Enter new password: ";
+                    cin>>pass;
+                    u1.modifyUser(name, id, pass);
+                    cout<<endl;
+                }
+                else
+                    cout<<"Invalid password! ";
+                break;
+
+            case 3:
+                while (true){
+                    cout<<"Select category for grocery: \n1. Fruits \n2.Vegetables  \n3.Dairy \n4.Meats \n5.Snacks  \n6.Bread & Bakery \n7.Back\n\n ";
                     cin>>ch2;
                     switch (ch2){
                     case 1:
@@ -176,12 +324,11 @@ int main(){
                         {
                             case 0:
                             break;
-
                             case 1 ... 9:
-                            {   
+                            { 
                                 cout<<"Enter number of "<<fruits.traversal(xa)<<" required: ";
                                 cin>>x;  
-                                b1.add(xa,fruits.traversal(xa),fruits.traverse(xa),x);
+                                add(xa,fruits.traversal(xa),fruits.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -200,12 +347,12 @@ int main(){
                         {
                             case 0:
                             break;
-                            case 11 ... 19:
+                            case 1 ... 9:
                             {
                                 
                                 cout<<"Enter number of "<<vegetables.traversal(xa)<<" required: ";
                                 cin>>x;
-                                b1.add(xa,vegetables.traversal(xa-10),vegetables.traverse(xa-10),x);
+                                add(xa,vegetables.traversal(xa),vegetables.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -224,12 +371,12 @@ int main(){
                         {
                             case 0:
                             break;
-                            case 21 ... 29:
+                            case 1 ... 9:
                             {
                                 
-                                cout<<"Enter number of "<<dairy.traversal(xa-20)<<" required: ";
+                                cout<<"Enter number of "<<dairy.traversal(xa)<<" required: ";
                                 cin>>x; 
-                                b1.add(xa,dairy.traversal(xa-20),dairy.traverse(xa-20),x);
+                                add(xa,dairy.traversal(xa),dairy.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -248,12 +395,12 @@ int main(){
                         {
                             case 0:
                             break;
-                            case 31 ... 39:
+                            case 1 ... 9:
                             {
                                 
-                                cout<<"Enter number of "<<meats.traversal(xa-30)<<" required: ";
+                                cout<<"Enter number of "<<meats.traversal(xa)<<" required: ";
                                 cin>>x; 
-                                b1.add(xa,meats.traversal(xa-30),meats.traverse(xa-30),x);
+                                add(xa,meats.traversal(xa),meats.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -272,12 +419,12 @@ int main(){
                         {
                             case 0:
                             break;
-                            case 41 ... 49:
+                            case 1 ... 9:
                             {
                                 
-                                cout<<"Enter number of "<<snacks.traversal(xa-40)<<" required: ";
+                                cout<<"Enter number of "<<snacks.traversal(xa)<<" required: ";
                                 cin>>x;
-                                b1.add(xa,snacks.traversal(xa-40),snacks.traverse(xa-40),x);
+                                add(xa,snacks.traversal(xa),snacks.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break;  
                             }
@@ -296,12 +443,12 @@ int main(){
                         {
                             case 0:
                             break;
-                            case 51 ... 59:
+                            case 1 ... 9:
                             {
                                 
-                                cout<<"Enter number of "<<bakery.traversal(xa-50)<<" required: ";
+                                cout<<"Enter number of "<<bakery.traversal(xa)<<" required: ";
                                 cin>>x;  
-                                b1.add(xa,bakery.traversal(xa-50),bakery.traverse(xa-50),x);
+                                add(xa,bakery.traversal(xa),bakery.traverse(xa),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -312,11 +459,23 @@ int main(){
                         break;
 
                     case 7:
-                        b1.displayList();
+                        displaycart();
+                        break;
+
+                    case 8:
                         break;
 
                     default:
                         break;
                 }
                 }
+                break; 
+
+            
+            default:
+                return 0;
+                break;
+        }
     }
+    
+}

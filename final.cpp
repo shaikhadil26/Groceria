@@ -1,8 +1,10 @@
 #include<iostream>
 #include<iomanip>
+#include<limits>
 using namespace std;
-//TODO : hidden password
-class UserDatabase{
+
+//I060 Mohammad Adil Shaikh, I064 Mohammed Az Syed, I070 Chetan Yadav
+class UserDatabase{//linked list for user database using classes
     public:
     string userId;
     string pass;
@@ -33,7 +35,7 @@ class UserDatabase{
         }    
     }
     
-    bool checkUser(string User, string Pass){
+    bool checkUser(string User, string Pass){//Function to check if user exists
         counter = 0;
         UserDatabase *current= head;
         while(current != NULL ){
@@ -48,12 +50,11 @@ class UserDatabase{
         return false;
     }
 
-    void modifyUser(string user_Id, string Pass, string Name){
+    void modifyUser(string user_Id, string Name){
     UserDatabase *current = head;
     for(int i = 0; i < counter - 1; i++)
         current = current ->next;
     current ->userId = user_Id;
-    current ->pass = Pass;
     current ->name = Name;
     }
 
@@ -63,6 +64,7 @@ class UserDatabase{
             c = c->next;
         return c->name;    
     }
+
     int getOrder(){
         UserDatabase *c = head;
         for(int i = 0; i < counter ; i++)
@@ -72,13 +74,15 @@ class UserDatabase{
 
 };
 
-class Categories{
+class Categories{//Linked list for inventory management using classes
     public:
     int serialNo;
     string name;
     int price;
     Categories* next;
     Categories* head = NULL;
+    
+    
 
     void insert(int SerialNo, string Name, int Price){
         Categories *current= head;
@@ -103,22 +107,159 @@ class Categories{
     void displayList(){
         Categories *current = head;
         while(current != NULL){
-            cout<<current ->serialNo<<") "<<left<<setw(30)<<current ->name/*<<left<<setw(10)*/<<"Rs. "<<current ->price<<"\n";
+            cout<<current ->serialNo<<") "<<left<<setw(30)<<current ->name<<"Rs. "<<current ->price<<"\n";
             current = current->next;
         }
     }
+
+    int CgetPrice(int j){//Function to traverse through the list to find the price of the selected item
+        Categories *c = head;
+        for(int i=1;i<j;i++)
+            c = c->next;
+
+        return c->price;
+    }
+
+    string CgetName(int j){//Function to traverse through the list to find the name of the selected item
+        Categories *c = head;
+        for(int i=1;i<j;i++)
+            c=c->next;
+
+        return c->name;
+    }
+
 };
 
+void line(){// Function to print a normal line for aesthetic in terminal
+    cout<<"\n";
+    for(int i=0;i<93;i++)
+    cout<<"-";
+    cout<<"\n";
+}
+
+void sline(){ // Function to print a  asterisk line for aesthetic in terminal
+    cout<<"\n";
+    for(int i=0;i<93;i++)
+    cout<<"*";
+    cout<<"\n";
+}
+
+class Bill{ //Stack implemented using linked list for bill management
+        public:
+        string name;
+        int cost;
+        int number;
+        int id;
+        Bill*next;
+        Bill* head =NULL;
+        
+      void push(int SerialNo, string Name, int Price,int Number){
+         Bill* item;
+         item =new Bill;
+         item->id=SerialNo;
+         item->name=Name;
+         item->cost=Price;
+         item->number=Number;
+         item->next=head;
+         head=item;       
+      }
+
+      void pop(){
+      if(head == NULL)
+         cout<<"Linked list is empty ";
+      else{
+         Bill *p;
+         p = head;
+         head = head->next;
+         delete p;
+         }       
+      }
+
+      void displayCart(){
+            if(head == NULL){
+               cout<<"Empty Cart"<<endl;  
+            }
+            else{
+               int i = 1;
+               int cost=0;
+               Bill *current =  head ;
+               cout<<left<<setw(10)<<"SerialNo"<<left<<setw(35)<<"Name"<<left<<setw(25)<<"Price"<<left<<setw(10)<<"Number of Products"<<endl;
+               cout<<endl;
+               while(current!=NULL){
+                  cout<<left<<setw(10)<<i<<left<<setw(35)<<current->name<<left<<setw(25)<<current->cost<<left<<setw(10)<<current->number<<"\n\n";
+                  cost=cost+(current->cost * current->number);
+                  current=current->next;
+                  i++;
+               }
+               line();
+               cout<<"Final Cost:\t"<<cost;
+               line();      
+            }        
+      }
+};
+
+int minDist(int distance[], bool visit[]){//Function to find minimum distance between nodes
+    int minimum=INT_MAX,index;            
+    for(int k=0;k<6;k++){
+        if(visit[k]==false && distance[k]<=minimum){
+            minimum=distance[k];
+            index=k;
+        }
+    }
+
+    return index;
+}
+
+void dijkstraAlgo(int graph[6][6],int src){ //Dijkstra algorithmn
+    int distance[6];                         
+    bool visit[6];
+
+    for(int k = 0; k<6; k++){
+        distance[k] = INT_MAX;
+        visit[k] = false;    
+    }
+    
+    distance[src] = 0;               
+    for(int c = 0; c < 6; c++){
+        int m=minDist(distance,visit); 
+        visit[m]=true;       
+        for(int k = 0; k<6; k++){ 
+            if(!visit[k] && graph[m][k] && distance[m]!=INT_MAX && distance[m]+graph[m][k]<distance[k])
+                distance[k]=distance[m]+graph[m][k];
+        }
+    }
+  
+    cout<<"Estimated delivery Time from GroceriaDeli:- "<<distance[5]<<" min";
+   
+}
 
 
-int main(){
+int main(){//Driver code
+    // Variable declarations
+    string id, pass, name, location;
+    bool condition;
+    int counter = 3;
+    char ch;
     UserDatabase u1;
+    Bill b1;
+    Categories fruits, vegetables, dairy, meats, snacks, bakery;
+
+    //Predefined User declaration
     u1.insert("abc@gmail.com", "123", "ABC",8);
     u1.insert("xyz@gmail.com", "456", "XYZ",4);
     u1.insert("ijk@gmail.com", "789", "ijk",2);
-    
-    Categories fruits, vegetables, dairy, meats, snacks, bakery;
-    
+
+    //Adj matrix for graph
+    int graph[6][6]={
+            {0, 8, 9, 3 , 9, 0},
+            {2, 0, 6, 9 , 2, 5},
+            {9, 8, 0, 3, 7, 4},
+            {0, 5, 3, 0, 4, 4},
+            {3, 6, 8, 6, 0, 9},
+            {5, 7, 6, 3, 9, 0},
+        };
+
+    //Inventory declaration  
     fruits.insert(1, "Apple", 150);
     fruits.insert(2, "Banana", 60);
     fruits.insert(3, "Grape", 25);
@@ -129,7 +270,6 @@ int main(){
     fruits.insert(8,"Orange",65);
     fruits.insert(9,"Mango",180);
     
-
     vegetables.insert(1, "Potatoes", 40);
     vegetables.insert(2,"Tomatoes",60);
     vegetables.insert(3,"Onion",50);
@@ -140,7 +280,6 @@ int main(){
     vegetables.insert(8,"Cucumber",40);
     vegetables.insert(9,"Cabbage",35);
     
-
     dairy.insert(1,"Milk",65);
     dairy.insert(2,"Cottage Cheese",120);
     dairy.insert(3,"Curd",80);
@@ -181,25 +320,25 @@ int main(){
     bakery.insert(8,"Velvet Cupcake",50);
     bakery.insert(9,"Apple Pie",750);
 
-    string id, pass, name;
-    bool condition;
-    int counter = 3;
-    char ch;
-
-    cout<<"\t\tWelcome to Groceria\n\tYour one step shop to all things grocery\n\nAre you an existing customer (enter y/n): "; 
+    line();
+    cout<<"\t\t\t\tWelcome to Groceria\n\t\t\tYour one step shop to all things grocery\n"; 
+    line();
+    cout<<"\t\t\t\tNew customer??? \n\t\t\t(enter y else press any key): ";
     cin>>ch;
     
-    if( ch == 'n'){
+    if( ch == 'y'){
+        line();
         cout<<"Enter name: ";
         cin>>name;
         cout<<"Enter email id: ";
         cin>>id;
         cout<<"Enter password: ";
         cin>>pass;
+        line();
         u1.insert(id, pass, name, 0);
-        cout<<"Account created \nPlease login again :) \n";
+        cout<<"\t\t\t\t  Account created \n\t\t\t\tPlease login again :) \n";
     }
-
+    line();
     retry:
     cout<<"Enter email id: ";
     cin>>id;
@@ -215,88 +354,231 @@ int main(){
         else 
             return 0;
     }
-                
+    line();            
     name = u1.getName();
     cout<<"Welcome "<<name<<"\nWhat would you like to do today\n";
+    menu:
     while(true){
-        cout<<"\n1. Display account information \n2. Modify account information \n3. Order groceries \n";
-        int ch1, ch2;
-        cin>>ch1; 
-        switch (ch1){
-            case 1:
-                int tOrders;
-                tOrders = u1.getOrder();
-                cout<<"Name: "<<name<<"\n";
-                cout<<"Email ID: "<<id<<"\t";
-                cout<<"Total number of orders: "<<tOrders;
-                break;
+         line();
+         cout<<"\n1. Display account information \n2. Modify account information \n3. Order groceries \n4. Exit \n";
+         line();
+         char ch1, ch2;
+         cin>>ch1; 
+         switch (ch1){
+               case '1':
+                  int tOrders;
+                  tOrders = u1.getOrder();
+                  sline();
+                  cout<<"Name: "<<name<<"\n";
+                  cout<<"Email ID: "<<id<<"\t";
+                  cout<<"Total number of orders: "<<tOrders<<"\n";
+                  sline();
+               break;
 
-            case 2:
-                bool check;
-                cout<<"Please re-enter account password ";
-                cin>>pass;
-                check = u1.checkUser(id, pass);
-                if(check == true){
-                    cout<<"Enter new name: ";
-                    cin>>name;
-                    cout<<"Enter new email id: ";
-                    cin>>id;
-                    cout<<"Enter new password: ";
-                    cin>>pass;
-                    u1.modifyUser(name, id, pass);
-                }
-                else
-                    cout<<"Invalid password! ";
-                break;
+            case '2':
+                  bool check;
+                  cout<<"Please re-enter account password ";
+                  cin>>pass;
+                  check = u1.checkUser(id, pass);
+                  if(check == true){
+                     line();
+                     cout<<"Enter new name: ";
+                     cin>>name;
+                     cout<<"Enter new email id: ";
+                     cin>>id;
+                     u1.modifyUser(name, id);
+                     line();
+                     cout<<endl;
+                  }
+                  else
+                     cout<<"Invalid password!!! ";
+                  break;
 
-            case 3:
+            case '3':
                 while (true){
-                    cout<<"Select category for grocery: \n1. Fruits \n2.Vegetables  \n3.Dairy \n4.Meats \n5.Snacks  \n6.Bread & Bakery \n7.Back ";
-                    cin>>ch2;
-                    switch (ch2){
-                    case 1:
-                        cout<<"Fruits Menu :- \n";
+                     int x1;
+                     int x;
+                     sline();
+                     cout<<"Select category: \n1. Fruits \n2. Vegetables  \n3. Dairy \n4. Meats \n5. Snacks  \n6. Bread & Bakery \n7. Show cart\n8. Proceed to checkout \n9. Back \n\n";
+                     cin>>ch2;
+                     sline();
+                     switch (ch2){
+                      case '1':
+                        line();
+                        cout<<"\t\tFruits Menu :- \n";
                         fruits.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart (Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{ 
+                                cout<<"Enter kilo(s) of "<<fruits.CgetName(x1)<<" required: ";
+                                cin>>x;  
+                                b1.push(x1,fruits.CgetName(x1),fruits.CgetPrice(x1),x);
+                                cout<<"Item added!"<<endl;
+                                break;
+                            }
+                            default:
+                            cout<<"Wrong id"<<endl;
+                        }
                         break;
 
-                    case 2:
-                        cout<<"Vegetables Menu :- \n";
+                     case '2':
+                        line();
+                        cout<<"\t\tVegetables Menu :- \n";
                         vegetables.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart (Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{
+                                
+                                cout<<"Enter kilo(s) of "<<vegetables.CgetName(x1)<<" required: ";
+                                cin>>x;
+                                b1.push(x1,vegetables.CgetName(x1),vegetables.CgetPrice(x1),x);
+                                cout<<"Item added!"<<endl;
+                                break;
+                            }
+                            default:
+                            cout<<"Wrong id"<<endl;
+                        }
                         break;
 
-                    case 3:
-                        cout<<"dairy Menu :- \n";
+                     case '3':
+                        line();
+                        cout<<"\t\tDairy Menu :- \n";
                         dairy.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{  
+                                cout<<"Enter quantity of "<<dairy.CgetName(x1)<<" required: ";
+                                cin>>x; 
+                                b1.push(x1,dairy.CgetName(x1),dairy.CgetPrice(x1),x);
+                                cout<<"Item added!"<<endl;
+                                break; 
+                            }
+                            default:
+                            cout<<"Wrong id"<<endl;
+                        }
                         break;
 
-                    case 4:
-                        cout<<"Meats Menu :- \n";
+                     case '4':
+                        line();
+                        cout<<"\t\tMeats Menu :- \n";
                         meats.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{     
+                                cout<<"Enter quantity of "<<meats.CgetName(x1)<<" required: ";
+                                cin>>x; 
+                                b1.push(x1,meats.CgetName(x1),meats.CgetPrice(x1),x);
+                                cout<<"Item added!"<<endl;
+                                break; 
+                            }
+                            default:
+                            cout<<"Wrong id"<<endl;
+
+                        }
                         break;
 
-                    case 5:
-                        cout<<"Snacks Menu :- \n";
+                     case '5':
+                        line();
+                        cout<<"\t\tSnacks Menu :- \n";
                         snacks.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{
+                                cout<<"Enter quantity of "<<snacks.CgetName(x1)<<" required: ";
+                                cin>>x;
+                                b1.push(x1,snacks.CgetName(x1),snacks.CgetPrice(x1),x);
+                                cout<<"Item added!"<<endl;
+                                break;  
+                            }
+                            default:
+                            cout<<"Wrong id"<<endl;
+
+                        }
                         break;
 
-                    case 6:
-                        cout<<"Bread & Bakery Menu :- \n";
+                     case '6':
+                        line();
+                        cout<<"\t\tBread & Bakery Menu :- \n";
                         bakery.displayList();
+                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cin>>x1;
+                        line();
+                        switch(x1){
+                            case 0:
+                            break;
+                            case 1 ... 9:{
+                                 cout<<"Enter quantity of "<<bakery.CgetName(x1)<<" required: ";
+                                 cin>>x;  
+                                 b1.push(x1,bakery.CgetName(x1),bakery.CgetPrice(x1),x);
+                                 cout<<"Item added!"<<endl;
+                                 break;
+                            }
+                            default:
+                                 cout<<"Wrong id"<<endl;
+                        }
                         break;
 
-                    case 7:
+                     case '7':
+                        b1.displayCart();
+                        char pop;
+                        line();
+                        cout<<"\t\tDelete first item?\n\t(enter y else press any key): ";
+                        cin>>pop;
+                        if(pop == 'y'){
+                           b1.pop();
+                        } 
+                        line();
+                        break;
 
+                     case '8':
+                        b1.displayCart();
+                        cout<<"Enter location for delivery ";
+                        cin>>location;
+                        dijkstraAlgo(graph,0);
+                        goto exit;
+                        break;
+
+                     case '9':
+                        goto menu;
                         break;
 
                     default:
+                        cout<<"Invalid option!";
                         break;
-                }
+                    }
                 }
                 break; 
 
+            case '4': 
+                  exit:
+                  line();
+                  cout<<"\tThank you for using Groceria!\n\t\tHave a nice day :) ";
+                  line();
+                  return 0;
+                break;    
             
             default:
-                return 0;
+                  cout<<"Invalid option!";
                 break;
         }
     }
