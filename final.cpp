@@ -43,7 +43,7 @@ class UserDatabase{//linked list for user database using classes
                 return true;
             }
             else{
-                counter++; 
+                counter++;//To check which node is the user found at
                 current = current->next;
             }        
         }
@@ -274,9 +274,10 @@ int main(){//Driver code
     bool condition;
     int counter = 3, size = 6;
     char ch;
+
     UserDatabase u1;
-    Cart b1;
     Categories fruits, vegetables, dairy, meats, snacks, bakery;
+    Cart c1;
 
     //Predefined User declaration
     u1.insert("abc@gmail.com", "123", "ABC",8);
@@ -417,7 +418,7 @@ int main(){//Driver code
                   if(check == true){
                      line();
                      int option;
-                     cout<<"Select detail to modify: - \n1. Name \n2. Username \n";
+                     cout<<"Select detail to modify: - \n1. Name \n2. Email ID \n";
                      cin>>option;
                      switch (option){
                      case 1:
@@ -464,7 +465,7 @@ int main(){//Driver code
                             case 1 ... 9:{ 
                                 cout<<"Enter kilo(s) of "<<fruits.CgetName(x1)<<" required: ";
                                 cin>>x;  
-                                b1.insertItem(x1,fruits.CgetName(x1),fruits.CgetPrice(x1),x);
+                                c1.insertItem(x1,fruits.CgetName(x1),fruits.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -487,7 +488,7 @@ int main(){//Driver code
                                 
                                 cout<<"Enter kilo(s) of "<<vegetables.CgetName(x1)<<" required: ";
                                 cin>>x;
-                                b1.insertItem(x1,vegetables.CgetName(x1),vegetables.CgetPrice(x1),x);
+                                c1.insertItem(x1,vegetables.CgetName(x1),vegetables.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -509,7 +510,7 @@ int main(){//Driver code
                             case 1 ... 9:{  
                                 cout<<"Enter quantity of "<<dairy.CgetName(x1)<<" required: ";
                                 cin>>x; 
-                                b1.insertItem(x1,dairy.CgetName(x1),dairy.CgetPrice(x1),x);
+                                c1.insertItem(x1,dairy.CgetName(x1),dairy.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -531,7 +532,7 @@ int main(){//Driver code
                             case 1 ... 9:{     
                                 cout<<"Enter quantity of "<<meats.CgetName(x1)<<" required: ";
                                 cin>>x; 
-                                b1.insertItem(x1,meats.CgetName(x1),meats.CgetPrice(x1),x);
+                                c1.insertItem(x1,meats.CgetName(x1),meats.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -554,7 +555,7 @@ int main(){//Driver code
                             case 1 ... 9:{
                                 cout<<"Enter quantity of "<<snacks.CgetName(x1)<<" required: ";
                                 cin>>x;
-                                b1.insertItem(x1,snacks.CgetName(x1),snacks.CgetPrice(x1),x);
+                                c1.insertItem(x1,snacks.CgetName(x1),snacks.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;  
                             }
@@ -577,7 +578,7 @@ int main(){//Driver code
                             case 1 ... 9:{
                                  cout<<"Enter quantity of "<<bakery.CgetName(x1)<<" required: ";
                                  cin>>x;  
-                                 b1.insertItem(x1,bakery.CgetName(x1),bakery.CgetPrice(x1),x);
+                                 c1.insertItem(x1,bakery.CgetName(x1),bakery.CgetPrice(x1),x);
                                  cout<<"Item added!"<<endl;
                                  break;
                             }
@@ -587,7 +588,7 @@ int main(){//Driver code
                         break;
 
                      case '7':      //Displays the cart and gives option to delete items in the cart 
-                        b1.displayCart();
+                        c1.displayCart();
                         char pop;
                         line();
                         cout<<"\t\t\t\tDelete any item?\n\t\t(enter y else press any key): ";
@@ -596,13 +597,13 @@ int main(){//Driver code
                            int pos; 
                            cout<<"Enter serial number of item to be deleted: - ";
                            cin>>pos;
-                           b1.deleteItem(pos);
+                           c1.deleteItem(pos);
                         } 
                         line();
                         break;
 
                      case '8': //Final Checkout with graph application for delivery 
-                        b1.displayCart();
+                        c1.displayCart();
                         int destination;
                         line();
                         cout<<"\tSelect location for delivery: - \n1. Andheri \n2. Vile Parle \n3. Santacruz \n4. Bandra \n5. Malad \n";
