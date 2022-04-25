@@ -35,7 +35,7 @@ class UserDatabase{//linked list for user database using classes
         }    
     }
     
-    bool checkUser(string User, string Pass){//Function to check if user exists
+    bool checkUser(string User, string Pass){//Boolean function to check if user exists
         counter = 0;
         UserDatabase *current= head;
         while(current != NULL ){
@@ -50,12 +50,15 @@ class UserDatabase{//linked list for user database using classes
         return false;
     }
 
-    void modifyUser(string user_Id, string Name){
-    UserDatabase *current = head;
-    for(int i = 0; i < counter - 1; i++)
-        current = current ->next;
-    current ->userId = user_Id;
-    current ->name = Name;
+    void modifyUser(string user_Id, string Name, int option){//Function to modify user details 
+        UserDatabase *current = head;
+        for(int i = 0; i < counter - 1; i++)
+            current = current ->next;
+        if(option == 1)    
+            current ->userId = user_Id;
+        else if(option == 2)
+            current ->name = Name;
+
     }
 
     string getName(){
@@ -81,8 +84,6 @@ class Categories{//Linked list for inventory management using classes
     int price;
     Categories* next;
     Categories* head = NULL;
-    
-    
 
     void insert(int SerialNo, string Name, int Price){
         Categories *current= head;
@@ -104,7 +105,7 @@ class Categories{//Linked list for inventory management using classes
         }    
     }
 
-    void displayList(){
+    void displayList(){// Function to display the list of categories
         Categories *current = head;
         while(current != NULL){
             cout<<current ->serialNo<<") "<<left<<setw(30)<<current ->name<<"Rs. "<<current ->price<<"\n";
@@ -138,21 +139,21 @@ void line(){// Function to print a normal line for aesthetic in terminal
     cout<<"\n";
 }
 
-void sline(){ // Function to print a  asterisk line for aesthetic in terminal
+void sline(){ // Function to print an asterisk line for aesthetic in terminal
     cout<<"\n";
     for(int i=0;i<93;i++)
     cout<<"*";
     cout<<"\n";
 }
 
-class Bill{ //Stack implemented using linked list for bill management
+class Cart{ //Linked list for the final bill using classes
         public:
         string name;
         int cost;
         int number;
         int id;
-        Bill*next;
-        Bill* head =NULL;
+        Cart*next;
+        Cart* head =NULL;
 
     int counter(){//Function to count total elements in the list
         int count = 0;
@@ -161,7 +162,7 @@ class Bill{ //Stack implemented using linked list for bill management
             return count;
         }
         else{
-            Bill* current;
+            Cart* current;
             current = head;
             while(current != NULL){
                 count++;
@@ -170,9 +171,9 @@ class Bill{ //Stack implemented using linked list for bill management
             return count;
     }
 }  
-      void push(int SerialNo, string Name, int Price,int Number){
-         Bill* item;
-         item =new Bill;
+      void insertItem(int SerialNo, string Name, int Price,int Number){
+         Cart* item;
+         item =new Cart;
          item->id=SerialNo;
          item->name=Name;
          item->cost=Price;
@@ -181,7 +182,7 @@ class Bill{ //Stack implemented using linked list for bill management
          head=item;       
       }
 
-      void pop(int position){
+      void deleteItem(int position){ //Function to delete desired item in the cart 
         int x = counter();
         if(head==NULL)
         cout<<"Linked list is Empty"<<endl;
@@ -189,15 +190,15 @@ class Bill{ //Stack implemented using linked list for bill management
         cout<<"Invalid position"<<endl;
         else{
             if(position==1){
-                Bill *current1;
+                Cart *current1;
                 current1 = head;
                 head = head->next;
                 delete current1;
             }
             else{
-                Bill *current=head;
-                Bill *temp;
-                Bill* d;
+                Cart *current=head;
+                Cart *temp;
+                Cart* d;
                 for(int i=0;i<position-2;i++)
                 current=current->next;
                 d = current ->next;
@@ -208,14 +209,14 @@ class Bill{ //Stack implemented using linked list for bill management
         }     
     }
 
-      void displayCart(){
+      void displayCart(){ // Function to display the cart with final amount 
             if(head == NULL){
                cout<<"Empty Cart"<<endl;  
             }
             else{
                int i = 1;
                int cost=0;
-               Bill *current =  head ;
+               Cart *current =  head ;
                cout<<left<<setw(10)<<"SerialNo"<<left<<setw(35)<<"Name"<<left<<setw(25)<<"Price"<<left<<setw(10)<<"Number of Products"<<endl;
                cout<<endl;
                while(current!=NULL){
@@ -274,7 +275,7 @@ int main(){//Driver code
     int counter = 3, size = 6;
     char ch;
     UserDatabase u1;
-    Bill b1;
+    Cart b1;
     Categories fruits, vegetables, dairy, meats, snacks, bakery;
 
     //Predefined User declaration
@@ -359,7 +360,7 @@ int main(){//Driver code
     cout<<"\t\t\t\tNew customer??? \n\t\t\t(enter y else press any key): ";
     cin>>ch;
     
-    if( ch == 'y'){
+    if( ch == 'y'){// if statement to check if the user is a new customer 
         line();
         cout<<"Enter name: ";
         cin>>name;
@@ -368,7 +369,7 @@ int main(){//Driver code
         cout<<"Enter password: ";
         cin>>pass;
         line();
-        u1.insert(id, pass, name, 0);
+        u1.insert(id, pass, name, 0);//creating a new user in the user database 
         cout<<"\t\t\t\t  Account created \n\t\t\t\tPlease login again :) \n";
     }
     line();
@@ -377,8 +378,8 @@ int main(){//Driver code
     cin>>id;
     cout<<"Enter password: ";
     cin>>pass;
-    condition = u1.checkUser(id, pass);
-    if(condition == false){
+    condition = u1.checkUser(id, pass);// Checks if the user exists in the database
+    if(condition == false){//if the returned condition is false the application gives the user three retries to login 
         cout<<"Invalid ID/Pass";
         cout<<"\nYou have "<<counter<<" valid retries \n";
         counter--;
@@ -391,7 +392,7 @@ int main(){//Driver code
     name = u1.getName();
     cout<<"Welcome "<<name<<"\nWhat would you like to do today\n";
     menu:
-    while(true){
+    while(true){//While loop for the main menu 
          line();
          cout<<"\n1. Display account information \n2. Modify account information \n3. Order groceries \n4. Exit \n";
          line();
@@ -415,13 +416,27 @@ int main(){//Driver code
                   check = u1.checkUser(id, pass);
                   if(check == true){
                      line();
-                     cout<<"Enter new name: ";
-                     cin>>name;
-                     cout<<"Enter new email id: ";
-                     cin>>id;
-                     u1.modifyUser(name, id);
+                     int option;
+                     cout<<"Select detail to modify: - \n1. Name \n2. Username \n";
+                     cin>>option;
+                     switch (option){
+                     case 1:
+                         cout<<"Enter new name: ";
+                         cin>>name;
+                         u1.modifyUser(name, id, option);
+                         break;
+
+                     case 2:
+                        cout<<"Enter new email id: ";
+                        cin>>id;
+                        u1.modifyUser(name, id, option);
+                        break;
+
+                     default:
+                         cout<<"Invalid option";
+                         break;
+                     }             
                      line();
-                     cout<<endl;
                   }
                   else
                      cout<<"Invalid password!!! ";
@@ -438,9 +453,9 @@ int main(){//Driver code
                      switch (ch2){
                       case '1':
                         line();
-                        cout<<"\t\tFruits Menu :- \n";
+                        cout<<"\t\tFruits Menu (per kilo) :- \n";
                         fruits.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart (Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart (Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -449,7 +464,7 @@ int main(){//Driver code
                             case 1 ... 9:{ 
                                 cout<<"Enter kilo(s) of "<<fruits.CgetName(x1)<<" required: ";
                                 cin>>x;  
-                                b1.push(x1,fruits.CgetName(x1),fruits.CgetPrice(x1),x);
+                                b1.insertItem(x1,fruits.CgetName(x1),fruits.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -460,9 +475,9 @@ int main(){//Driver code
 
                      case '2':
                         line();
-                        cout<<"\t\tVegetables Menu :- \n";
+                        cout<<"\t\tVegetables Menu (per kilo) :- \n";
                         vegetables.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart (Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart (Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -472,7 +487,7 @@ int main(){//Driver code
                                 
                                 cout<<"Enter kilo(s) of "<<vegetables.CgetName(x1)<<" required: ";
                                 cin>>x;
-                                b1.push(x1,vegetables.CgetName(x1),vegetables.CgetPrice(x1),x);
+                                b1.insertItem(x1,vegetables.CgetName(x1),vegetables.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;
                             }
@@ -485,7 +500,7 @@ int main(){//Driver code
                         line();
                         cout<<"\t\tDairy Menu :- \n";
                         dairy.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart(Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -494,7 +509,7 @@ int main(){//Driver code
                             case 1 ... 9:{  
                                 cout<<"Enter quantity of "<<dairy.CgetName(x1)<<" required: ";
                                 cin>>x; 
-                                b1.push(x1,dairy.CgetName(x1),dairy.CgetPrice(x1),x);
+                                b1.insertItem(x1,dairy.CgetName(x1),dairy.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -507,7 +522,7 @@ int main(){//Driver code
                         line();
                         cout<<"\t\tMeats Menu :- \n";
                         meats.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart(Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -516,7 +531,7 @@ int main(){//Driver code
                             case 1 ... 9:{     
                                 cout<<"Enter quantity of "<<meats.CgetName(x1)<<" required: ";
                                 cin>>x; 
-                                b1.push(x1,meats.CgetName(x1),meats.CgetPrice(x1),x);
+                                b1.insertItem(x1,meats.CgetName(x1),meats.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break; 
                             }
@@ -530,7 +545,7 @@ int main(){//Driver code
                         line();
                         cout<<"\t\tSnacks Menu :- \n";
                         snacks.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart(Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -539,7 +554,7 @@ int main(){//Driver code
                             case 1 ... 9:{
                                 cout<<"Enter quantity of "<<snacks.CgetName(x1)<<" required: ";
                                 cin>>x;
-                                b1.push(x1,snacks.CgetName(x1),snacks.CgetPrice(x1),x);
+                                b1.insertItem(x1,snacks.CgetName(x1),snacks.CgetPrice(x1),x);
                                 cout<<"Item added!"<<endl;
                                 break;  
                             }
@@ -553,7 +568,7 @@ int main(){//Driver code
                         line();
                         cout<<"\t\tBread & Bakery Menu :- \n";
                         bakery.displayList();
-                        cout<<"\nPress 0 to go back or the id number to push to cart(Enter number only!): ";
+                        cout<<"\nPress 0 to go back or the id number to insertItem to cart(Enter number only!): ";
                         cin>>x1;
                         line();
                         switch(x1){
@@ -562,7 +577,7 @@ int main(){//Driver code
                             case 1 ... 9:{
                                  cout<<"Enter quantity of "<<bakery.CgetName(x1)<<" required: ";
                                  cin>>x;  
-                                 b1.push(x1,bakery.CgetName(x1),bakery.CgetPrice(x1),x);
+                                 b1.insertItem(x1,bakery.CgetName(x1),bakery.CgetPrice(x1),x);
                                  cout<<"Item added!"<<endl;
                                  break;
                             }
@@ -571,7 +586,7 @@ int main(){//Driver code
                         }
                         break;
 
-                     case '7':
+                     case '7':      //Displays the cart and gives option to delete items in the cart 
                         b1.displayCart();
                         char pop;
                         line();
@@ -579,14 +594,14 @@ int main(){//Driver code
                         cin>>pop;
                         if(pop == 'y'){
                            int pos; 
-                           cout<<"Enter position of item to be deleted: - ";
+                           cout<<"Enter serial number of item to be deleted: - ";
                            cin>>pos;
-                           b1.pop(pos);
+                           b1.deleteItem(pos);
                         } 
                         line();
                         break;
 
-                     case '8':
+                     case '8': //Final Checkout with graph application for delivery 
                         b1.displayCart();
                         int destination;
                         line();
