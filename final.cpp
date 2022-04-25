@@ -231,9 +231,9 @@ class Bill{ //Stack implemented using linked list for bill management
       }
 };
 
-int minDist(int distance[], bool visit[]){//Function to find minimum distance between nodes
+int minDist(int distance[], bool visit[], int size){//Function to find minimum distance between nodes
     int minimum=INT_MAX,index;            
-    for(int k=0;k<6;k++){
+    for(int k=0;k<size;k++){
         if(visit[k]==false && distance[k]<=minimum){
             minimum=distance[k];
             index=k;
@@ -243,20 +243,20 @@ int minDist(int distance[], bool visit[]){//Function to find minimum distance be
     return index;
 }
 
-void dijkstraAlgo(int graph[6][6],int src, int destination){ //Dijkstra algorithm 
-    int distance[6];                         
-    bool visit[6];
+void dijkstraAlgo(int graph[10][10],int src, int destination, int size){ //Dijkstra algorithm 
+    int distance[size];                         
+    bool visit[size];
 
-    for(int k = 0; k<6; k++){
+    for(int k = 0; k<size; k++){
         distance[k] = INT_MAX;
         visit[k] = false;    
     }
     
     distance[src] = 0;               
-    for(int c = 0; c < 6; c++){
-        int m=minDist(distance,visit); 
+    for(int c = 0; c < size; c++){
+        int m=minDist(distance, visit, size); 
         visit[m]=true;       
-        for(int k = 0; k<6; k++){ 
+        for(int k = 0; k<size; k++){ 
             if(!visit[k] && graph[m][k] && distance[m]!=INT_MAX && distance[m]+graph[m][k]<distance[k])
                 distance[k]=distance[m]+graph[m][k];
         }
@@ -271,7 +271,7 @@ int main(){//Driver code
     // Variable declarations
     string id, pass, name;
     bool condition;
-    int counter = 3;
+    int counter = 3, size = 6;
     char ch;
     UserDatabase u1;
     Bill b1;
@@ -283,7 +283,7 @@ int main(){//Driver code
     u1.insert("ijk@gmail.com", "789", "ijk",2);
 
     //Adj matrix for graph
-    int graph[6][6]={
+    int graph[10][10]={
             {0, 18, 29, 13 , 9, 0},
             {12, 0, 26, 19 , 22, 15},
             {9, 18, 0, 23, 17, 24},
@@ -593,7 +593,7 @@ int main(){//Driver code
                         cout<<"\tSelect location for delivery: - \n1. Andheri \n2. Vile Parle \n3. Santacruz \n4. Bandra \n5. Malad \n";
                         cin>>destination;
                         line();
-                        dijkstraAlgo(graph,0, destination);
+                        dijkstraAlgo(graph,0, destination, size);
 
                         goto exit;
                         break;
