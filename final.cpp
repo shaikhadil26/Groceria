@@ -133,7 +133,8 @@ class Categories{//Linked list for inventory management using classes
 void line(){// Function to print a normal line for aesthetic in terminal
     cout<<"\n";
     for(int i=0;i<93;i++)
-    cout<<"-";
+        cout<<"-";
+
     cout<<"\n";
 }
 
@@ -152,7 +153,23 @@ class Bill{ //Stack implemented using linked list for bill management
         int id;
         Bill*next;
         Bill* head =NULL;
-        
+
+    int counter(){//Function to count total elements in the list
+        int count = 0;
+        if(head == NULL){
+            count = 0;
+            return count;
+        }
+        else{
+            Bill* current;
+            current = head;
+            while(current != NULL){
+                count++;
+                current = current ->next;
+            }
+            return count;
+    }
+}  
       void push(int SerialNo, string Name, int Price,int Number){
          Bill* item;
          item =new Bill;
@@ -164,16 +181,32 @@ class Bill{ //Stack implemented using linked list for bill management
          head=item;       
       }
 
-      void pop(){
-      if(head == NULL)
-         cout<<"Linked list is empty ";
-      else{
-         Bill *p;
-         p = head;
-         head = head->next;
-         delete p;
-         }       
-      }
+      void pop(int position){
+        int x = counter();
+        if(head==NULL)
+        cout<<"Linked list is Empty"<<endl;
+        else if(x<position)
+        cout<<"Invalid position"<<endl;
+        else{
+            if(position==1){
+                Bill *current1;
+                current1 = head;
+                head = head->next;
+                delete current1;
+            }
+            else{
+                Bill *current=head;
+                Bill *temp;
+                Bill* d;
+                for(int i=0;i<position-2;i++)
+                current=current->next;
+                d = current ->next;
+                temp = d->next;
+                delete d;
+                current->next=temp;
+            }   
+        }     
+    }
 
       void displayCart(){
             if(head == NULL){
@@ -210,7 +243,7 @@ int minDist(int distance[], bool visit[]){//Function to find minimum distance be
     return index;
 }
 
-void dijkstraAlgo(int graph[6][6],int src){ //Dijkstra algorithmn
+void dijkstraAlgo(int graph[6][6],int src, int destination){ //Dijkstra algorithm 
     int distance[6];                         
     bool visit[6];
 
@@ -229,14 +262,14 @@ void dijkstraAlgo(int graph[6][6],int src){ //Dijkstra algorithmn
         }
     }
   
-    cout<<"Estimated delivery Time from GroceriaDeli:- "<<distance[5]<<" min";
+    cout<<"Estimated delivery Time from GroceriaDeli:- "<<distance[destination]<<" min";
    
 }
 
 
 int main(){//Driver code
     // Variable declarations
-    string id, pass, name, location;
+    string id, pass, name;
     bool condition;
     int counter = 3;
     char ch;
@@ -251,12 +284,12 @@ int main(){//Driver code
 
     //Adj matrix for graph
     int graph[6][6]={
-            {0, 8, 9, 3 , 9, 0},
-            {2, 0, 6, 9 , 2, 5},
-            {9, 8, 0, 3, 7, 4},
-            {0, 5, 3, 0, 4, 4},
-            {3, 6, 8, 6, 0, 9},
-            {5, 7, 6, 3, 9, 0},
+            {0, 18, 29, 13 , 9, 0},
+            {12, 0, 26, 19 , 22, 15},
+            {9, 18, 0, 23, 17, 24},
+            {0, 15, 33, 0, 14, 24},
+            {33, 26, 18, 26, 0, 19},
+            {15, 27, 16, 23, 29, 0},
         };
 
     //Inventory declaration  
@@ -317,7 +350,7 @@ int main(){//Driver code
     bakery.insert(5,"Chocolate Chip Cookies",50);
     bakery.insert(6,"Crossiant",30);
     bakery.insert(7,"Bagel",50);
-    bakery.insert(8,"Velvet Cupcake",50);
+    bakery.insert(8,"Red Velvet Cupcake",50);
     bakery.insert(9,"Apple Pie",750);
 
     line();
@@ -542,19 +575,26 @@ int main(){//Driver code
                         b1.displayCart();
                         char pop;
                         line();
-                        cout<<"\t\tDelete first item?\n\t(enter y else press any key): ";
+                        cout<<"\t\t\t\tDelete any item?\n\t\t(enter y else press any key): ";
                         cin>>pop;
                         if(pop == 'y'){
-                           b1.pop();
+                           int pos; 
+                           cout<<"Enter position of item to be deleted: - ";
+                           cin>>pos;
+                           b1.pop(pos);
                         } 
                         line();
                         break;
 
                      case '8':
                         b1.displayCart();
-                        cout<<"Enter location for delivery ";
-                        cin>>location;
-                        dijkstraAlgo(graph,0);
+                        int destination;
+                        line();
+                        cout<<"\tSelect location for delivery: - \n1. Andheri \n2. Vile Parle \n3. Santacruz \n4. Bandra \n5. Malad \n";
+                        cin>>destination;
+                        line();
+                        dijkstraAlgo(graph,0, destination);
+
                         goto exit;
                         break;
 
