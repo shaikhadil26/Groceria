@@ -3,7 +3,6 @@
 #include<limits>
 using namespace std;
 
-//I060 Mohammad Adil Shaikh, I064 Mohammed Az Syed, I070 Chetan Yadav
 class UserDatabase{//linked list for user database using classes
     public:
     string userId;
